@@ -1,4 +1,5 @@
 require 'pathname'
+require 'cgi'
 require 'erubis'
 
 module Qkcast
@@ -17,7 +18,7 @@ module Qkcast
       self.files.map do |f|
         size = File.size(f)
         name = Pathname.new(f).basename.to_s
-        template.result(:file => name, :size => size, :url => @url)
+        template.result(:file => CGI.escape(name), :size => size, :url => @url)
       end
     end
 

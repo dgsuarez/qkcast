@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Qkcast::Generator do
 
   it "should get a sorted list of mp3 from a path" do
-    Qkcast::Generator.new("spec/files").files.should eql %w(a.mp3 b.mp3 c.mp3).map {|x| "spec/files/#{x}"}
+    Qkcast::Generator.new("spec/files").files.should eql ["a tal.mp3", "b.mp3", "c.mp3"].map {|x| "spec/files/#{x}"}
   end
 
   it "should create a rss item for each file" do
@@ -20,7 +20,12 @@ describe Qkcast::Generator do
 
   it "should generate with the provided url" do
     i = Qkcast::Generator.new("spec/files", "http://example.com").items.first
-    i.should =~ /enclosure url="http:\/\/example.com\/a.mp3"/
+    i.should =~ /enclosure url="http:\/\/example.com\//
+  end
+
+  it "should generate with escaped urls" do
+    i = Qkcast::Generator.new("spec/files", "http://example.com")
+    i.items.first.should =~ /a\+tal\.mp3/
   end
 
   it "should generate the full rss" do
