@@ -3,7 +3,17 @@ require 'rack'
 require 'thor'
 require 'qkcast/generator'
 
-HANDLER = Rack::Handler::WEBrick
+begin
+  require 'thin'
+  HANDLER = Rack::Handler::Thin
+rescue LoadError
+  begin
+    require 'mongrel'
+    HANDLER = Rack::Handler::Mongrel
+  rescue LoadError
+    HANDLER = Rack::Handler::WEBrick
+  end
+end
 
 module Qkcast
   class Server < Thor
