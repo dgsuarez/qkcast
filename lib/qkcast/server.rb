@@ -1,16 +1,25 @@
 require 'socket'
 require 'rack'
+require 'thor'
+require 'qkcast/generator'
+
+HANDLER = Rack::Handler::WEBrick
 
 module Qkcast
-  class Server
+  class Server < Thor
 
-    def serve(path, opts={})
-      ip = opts["ip"] || Socket.ip_address_list.detect{|intf| intf.ipv4? and !intf.ipv4_loopback? and !intf.ipv4_multicast? and !intf.ipv4_private?}
-      pot = opts["port"] || 3000
+    desc "serve PATH", "generate rss in PATH and start serving"
+    option :port
+    option :ip
+    def serve(path)
+      ip = options[:ip] || UDPSocket.open {|s| s.connect("8.8.8.8", 1); s.addr.last}
+      port = options[:port] || 3000
       url = "http://#{ip}:#{port}"
       rss = Qkcast::Generator.new(path, url).rss
       File.open(File.join(path, "feed.rss"), 'w') {|f| f << rss}
-      Rack::Handler::Webrick.run(Rack::Directory.new(path), :port => port)
+      puts "Add #{url}/feed.rss to your podcast player"
+      Signal.trap('INT') { HANDLER.shutdown }
+      HANDLER.run(Rack::Directory.new(path), :Port => port)
     end
 
   end

@@ -2,4 +2,4 @@
 
 require 'qkcast/server'
 
-Qkcast::CLI.start(ARGV)
+Qkcast::Server.start(ARGV)
