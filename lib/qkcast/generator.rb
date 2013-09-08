@@ -18,7 +18,9 @@ module Qkcast
       self.files.map do |f|
         size = File.size(f)
         name = Pathname.new(f).basename.to_s
-        template.result(:file => CGI.escape(name), :size => size, :url => @url)
+        escaped_name = CGI.escape(name)
+        item_url = "#{@url}/#{escaped_name}"
+        template.result(:name => name, :size => size, :url => item_url)
       end
     end
 
