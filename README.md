@@ -1,24 +1,16 @@
 # Qkcast
 
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'qkcast'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install qkcast
+Quickly create a podcast server from a directory of mp3s
 
 ## Usage
 
-TODO: Write usage instructions here
+Once installed use it as
+    
+    qkcast serve DIR 
+
+Qkcast will create an RSS with all the mp3s in DIR and start serving it.
+
+You can optionally pass `--ip` and `--port`
 
 ## Contributing
 
